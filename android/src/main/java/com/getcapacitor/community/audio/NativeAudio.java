@@ -1,5 +1,7 @@
 package com.getcapacitor.community.audio;
 
+import static android.content.ContentResolver.SCHEME_ANDROID_RESOURCE;
+import static android.content.ContentResolver.SCHEME_CONTENT;
 import static com.getcapacitor.community.audio.Constant.ASSET_ID;
 import static com.getcapacitor.community.audio.Constant.ASSET_PATH;
 import static com.getcapacitor.community.audio.Constant.AUDIO_CHANNEL_NUM;
@@ -352,7 +354,7 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
 
             String audioId = call.getString(ASSET_ID);
 
-            boolean isUrl = call.getBoolean("isUrl", false);
+            boolean isFileUrl = call.getBoolean("isUrl", false);
 
             if (!isStringValid(audioId)) {
                 call.reject(ERROR_AUDIO_ID_MISSING + " - " + audioId);
@@ -370,12 +372,12 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
                 String fullPath = assetPath; //"raw/".concat(assetPath);
 
                 AssetFileDescriptor assetFileDescriptor;
-                if (isUrl) {
+                if (isFileUrl) {
                     File f = new File(new URI(fullPath));
                     ParcelFileDescriptor p = ParcelFileDescriptor.open(f, ParcelFileDescriptor.MODE_READ_ONLY);
                     assetFileDescriptor = new AssetFileDescriptor(p, 0, -1);
                 } else {
-                    if (fullPath.startsWith("content")) {
+                    if (fullPath.startsWith(SCHEME_CONTENT + "://") || fullPath.startsWith(SCHEME_ANDROID_RESOURCE + "://")) {
                         assetFileDescriptor = getBridge()
                             .getActivity()
                             .getContentResolver()

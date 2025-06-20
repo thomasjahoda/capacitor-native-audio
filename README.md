@@ -220,6 +220,8 @@ configure(options: ConfigureOptions) => Promise<void>
 preload(options: PreloadOptions) => Promise<void>
 ```
 
+WARNING: If an audio asset with that assetId was already preloaded, this will throw an error.
+
 | Param         | Type                                                      |
 | ------------- | --------------------------------------------------------- |
 | **`options`** | <code><a href="#preloadoptions">PreloadOptions</a></code> |
@@ -232,6 +234,8 @@ preload(options: PreloadOptions) => Promise<void>
 ```typescript
 play(options: { assetId: string; time?: number; }) => Promise<void>
 ```
+
+WARNING: You have to call {@link NativeAudio#preload} before calling this method.
 
 | Param         | Type                                             |
 | ------------- | ------------------------------------------------ |
@@ -396,13 +400,13 @@ Listen for asset completed playing event
 
 #### PreloadOptions
 
-| Prop                  | Type                 |
-| --------------------- | -------------------- |
-| **`assetPath`**       | <code>string</code>  |
-| **`assetId`**         | <code>string</code>  |
-| **`volume`**          | <code>number</code>  |
-| **`audioChannelNum`** | <code>number</code>  |
-| **`isUrl`**           | <code>boolean</code> |
+| Prop                  | Type                 | Description                                                                                                                                                                                                                                                                                            | Default          |
+| --------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------- |
+| **`assetPath`**       | <code>string</code>  | The path to the audio asset. Set {@link isUrl} to true if you provide a file:// URL. For Android, this could also be in the format `android.resource://&lt;package_name&gt;/raw/&lt;asset_name&gt;`. Otherwise, assumes this is a relative path according to the platform assets directory by default. |                  |
+| **`assetId`**         | <code>string</code>  | The arbitrary unique identifier for the audio asset to be used for calls like {@link NativeAudio#play}. e.g. `{ assetId: 'sound', assetPath: 'android.resource://com.example.app/raw/sound' }`                                                                                                         |                  |
+| **`volume`**          | <code>number</code>  | The volume of the audio asset, from 0.0 to 1.0.                                                                                                                                                                                                                                                        | <code>1.0</code> |
+| **`audioChannelNum`** | <code>number</code>  |                                                                                                                                                                                                                                                                                                        |                  |
+| **`isUrl`**           | <code>boolean</code> | WARNING: Should be called isFileUrl. Use if you provide a file:// URL.                                                                                                                                                                                                                                 |                  |
 
 
 #### PluginListenerHandle
